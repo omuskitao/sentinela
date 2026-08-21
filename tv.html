@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Mídia Indoor - TV</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #07111f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .tv-container {
+      display: flex;
+      width: 95vw;
+      height: 90vh;
+      gap: 18px;
+    }
+
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      width: 35%;
+      gap: 18px;
+    }
+
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      width: 65%;
+      gap: 18px;
+    }
+
+    .box {
+      background: linear-gradient(145deg, #0d1b2a, #10263a);
+      border: 3px solid #2b9fbd;
+      border-radius: 15px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 174, 214, 0.15);
+    }
+
+    .box-title {
+      color: #ffffff;
+      font-size: 2.2vw;
+      font-weight: bold;
+      text-transform: uppercase;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+      margin-bottom: 12px;
+    }
+
+    /* Painel esquerdo - local */
+    .local-box {
+      flex: 1;
+    }
+
+    .local-number {
+      color: #46c7e8;
+      font-size: 9vw;
+      font-weight: bold;
+      line-height: 1;
+      text-shadow: 0 0 15px rgba(70, 199, 232, 0.25);
+    }
+
+    .local-type {
+      color: #b9d7e3;
+      font-size: 1.8vw;
+      font-weight: bold;
+      margin-top: 6px;
+    }
+
+    /* Histórico */
+    .history-box {
+      flex: 1;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+
+    .history-box .box-title {
+      font-size: 1.8vw;
+      align-self: center;
+    }
+
+    #history-list {
+      list-style: none;
+      width: 100%;
+      color: #46c7e8;
+      font-size: 1.5vw;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    #history-list li {
+      margin-bottom: 8px;
+      border-bottom: 1px solid rgba(70, 199, 232, 0.2);
+      padding-bottom: 5px;
+    }
+
+    /* Painel direito - nome do paciente */
+    .patient-box {
+      flex: 3;
+    }
+
+    .patient-name {
+      color: #ffffff;
+      font-size: 6.5vw;
+      font-weight: bold;
+      line-height: 1.2;
+      word-break: break-word;
+      text-shadow: 0 0 15px rgba(70, 199, 232, 0.15);
+    }
+
+    /* Logo */
+    .logo-box {
+      flex: 1;
+      padding: 15px;
+      overflow: hidden;
+      background: #07111f;
+    }
+
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      max-width: 500px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 12px rgba(70, 199, 232, 0.2));
+    }
+
+    /* Animação de flash quando chama */
+    @keyframes flash {
+      0%, 100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
+    }
+
+    .flash {
+      animation: flash 0.5s ease 3;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="tv-container">
+
+    <div class="left-panel">
+
+      <div class="box local-box">
+        <div class="box-title" id="local-tipo">GUICHÊ</div>
+        <div class="local-number" id="local-numero">--</div>
+      </div>
+
+      <div class="box history-box">
+        <div class="box-title">ÚLTIMAS CHAMADAS</div>
+        <ul id="history-list"></ul>
+      </div>
+
+    </div>
+
+    <div class="right-panel">
+
+      <div class="box patient-box">
+        <div class="box-title">PACIENTE</div>
+
+        <div class="patient-name" id="patient-name">
+          AGUARDANDO...
+        </div>
+      </div>
+
+      <!-- Logo do Sistema Hospitalar -->
+      <div class="box logo-box">
+        <img
+          src="logo-sh.png"
+          alt="SH - Sistema Hospitalar"
+          class="logo-img"
+        >
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    let ultimoId = null;
+
+    // Função criada para buscar a chamada atual e o histórico da TV em tempo real.
+    function atualizar() {
+      fetch("/tv/chamada")
+        .then(r => r.json())
+        .then(data => {
+          const chamada = data.chamada;
+          const historico = data.historico || [];
+
+          if (chamada) {
+            document.getElementById("local-tipo").innerText =
+              chamada.localTipo || "GUICHÊ";
+
+            document.getElementById("local-numero").innerText =
+              chamada.localNumero || "--";
+
+            document.getElementById("patient-name").innerText =
+              chamada.paciente || "AGUARDANDO...";
+
+            // Flash visual quando há chamada nova
+            if (chamada.id !== ultimoId) {
+              ultimoId = chamada.id;
+
+              const patientBox =
+                document.querySelector(".patient-box");
+
+              patientBox.classList.remove("flash");
+
+              void patientBox.offsetWidth;
+
+              patientBox.classList.add("flash");
+            }
+          }
+
+          // Histórico
+          const list = document.getElementById("history-list");
+
+          list.innerHTML = "";
+
+          historico.slice(0, 4).forEach(h => {
+            const li = document.createElement("li");
+
+            const tipo = h.localTipo
+              ? h.localTipo.substring(0, 4)
+              : "GUIC";
+
+            li.innerText =
+              `${tipo}. ${h.localNumero} - ${h.paciente}`;
+
+            list.appendChild(li);
+          });
+        })
+        .catch(err =>
+          console.log("Erro ao buscar chamada:", err)
+        );
+    }
+
+    // Polling a cada 2 segundos
+    atualizar();
+
+    setInterval(atualizar, 2000);
+  </script>
+
+</body>
+</html>
