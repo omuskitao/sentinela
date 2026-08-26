@@ -27,7 +27,10 @@ function readDB() {
     };
   }
 
-  return JSON.parse(fs.readFileSync(DB_FILE));
+  return JSON.parse(
+    fs.readFileSync(DB_FILE, "utf8")
+);
+
 }
 
 function writeDB(data) {
