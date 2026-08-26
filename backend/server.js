@@ -232,6 +232,17 @@ app.get("/medicacoes", (req, res) => {
 
 
 // ==============================
+// LISTAR PACIENTES
+// ==============================
+
+app.get("/pacientes", (req, res) => {
+  const db = readDB();
+
+  res.json(db.pacientes);
+});
+
+
+// ==============================
 // START
 // ==============================
 
@@ -240,3 +251,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
+
