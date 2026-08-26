@@ -12,6 +12,11 @@ app.use(express.static(path.join(__dirname, "../frontend")));
 
 const DB_FILE = path.join(__dirname, "db.json");
 
+
+// ==============================
+// BANCO DE DADOS
+// ==============================
+
 function readDB() {
   if (!fs.existsSync(DB_FILE)) {
     return {
@@ -26,10 +31,17 @@ function readDB() {
 }
 
 function writeDB(data) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+  fs.writeFileSync(
+    DB_FILE,
+    JSON.stringify(data, null, 2)
+  );
 }
 
+
+// ==============================
 // LOGIN
+// ==============================
+
 app.post("/login", (req, res) => {
   const db = readDB();
 
@@ -47,26 +59,70 @@ app.post("/login", (req, res) => {
   res.json(user);
 });
 
+
+// ==============================
 // ATENDIMENTO
+// ==============================
+
 app.post("/atendimento", (req, res) => {
   const db = readDB();
 
   const paciente = {
     id: Date.now(),
-    nome: req.body.nome,
-    cpf: req.body.cpf,
-    tipo: req.body.tipo,
+
+    // Dados pessoais
+    nome: req.body.nome || "",
+    cpf: req.body.cpf || "",
+    dataNascimento: req.body.dataNascimento || "",
+    sexo: req.body.sexo || "",
+    nomeMae: req.body.nomeMae || "",
+    estadoCivil: req.body.estadoCivil || "",
+
+    // Endereço
+    endereco: {
+      cep: req.body.endereco?.cep || "",
+      logradouro: req.body.endereco?.logradouro || "",
+      numero: req.body.endereco?.numero || "",
+      complemento: req.body.endereco?.complemento || "",
+      bairro: req.body.endereco?.bairro || "",
+      cidade: req.body.endereco?.cidade || "",
+      estado: req.body.endereco?.estado || ""
+    },
+
+    // Contato
+    telefone: req.body.telefone || "",
+    email: req.body.email || "",
+
+    // Contato de emergência
+    contatoEmergencia: {
+      nome: req.body.contatoEmergencia?.nome || "",
+      telefone: req.body.contatoEmergencia?.telefone || "",
+      parentesco: req.body.contatoEmergencia?.parentesco || ""
+    },
+
+    // Tipo de atendimento
+    tipo: req.body.tipo || "",
+    convenio: req.body.convenio || "",
+
+    // Status
     status: "triagem",
-    createdAt: new Date()
+
+    // Data de cadastro
+    createdAt: new Date().toISOString()
   };
 
   db.pacientes.push(paciente);
+
   writeDB(db);
 
-  res.json(paciente);
+  res.status(201).json(paciente);
 });
 
+
+// ==============================
 // TRIAGEM
+// ==============================
+
 app.post("/triagem", (req, res) => {
   const db = readDB();
 
@@ -93,18 +149,28 @@ app.post("/triagem", (req, res) => {
   };
 
   db.triagens.push(triagem);
+
   writeDB(db);
 
   res.json(triagem);
 });
 
+
+// ==============================
 // LISTAR TRIAGENS
+// ==============================
+
 app.get("/triagens", (req, res) => {
   const db = readDB();
+
   res.json(db.triagens);
 });
 
-// IMPLEMENTADO: rota com lista fixa de medicações
+
+// ==============================
+// LISTA DE MEDICAÇÕES
+// ==============================
+
 app.get("/lista-medicacoes", (req, res) => {
   res.json([
     "Dipirona",
@@ -120,7 +186,11 @@ app.get("/lista-medicacoes", (req, res) => {
   ]);
 });
 
+
+// ==============================
 // CONSULTA
+// ==============================
+
 app.post("/consulta", (req, res) => {
   const db = readDB();
 
@@ -134,20 +204,30 @@ app.post("/consulta", (req, res) => {
   };
 
   db.consultas.push(consulta);
+
   writeDB(db);
 
   res.json(consulta);
 });
 
+
+// ==============================
 // MEDICAÇÕES
+// ==============================
+
 app.get("/medicacoes", (req, res) => {
   const db = readDB();
+
   res.json(db.consultas);
 });
 
+
+// ==============================
 // START
-const PORT = process.env.PORT
-        || 3000;
-app.listen(PORT, () =>{
-  console.log(`Porta ${PORT}`);
+// ==============================
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
