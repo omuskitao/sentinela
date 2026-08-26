@@ -1,36 +1,322 @@
 <!DOCTYPE html>
-<html>
-<head><link rel="stylesheet" href="css/style.css"></head>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Atendimento</title>
+</head>
+
 <body>
+
 <div class="container">
-<h2>Atendimento</h2>
 
-<input id="nome" placeholder="Nome">
-<input id="cpf" placeholder="CPF">
+    <h2>Cadastro de Paciente</h2>
 
-<select id="tipo">
-  <option>Convenio</option>
-  <option>Particular</option>
-</select>
+    <!-- Dados pessoais -->
+    <h3>Dados pessoais</h3>
 
-<input type="file" id="foto">
+    <label for="nome">Nome completo</label>
+    <input
+        type="text"
+        id="nome"
+        name="nome"
+        placeholder="Nome completo"
+        required
+    >
 
-<button onclick="cadastrar()">Cadastrar</button>
+    <label for="cpf">CPF</label>
+    <input
+        type="text"
+        id="cpf"
+        name="cpf"
+        placeholder="000.000.000-00"
+        maxlength="14"
+        required
+    >
+
+    <label for="dataNascimento">Data de nascimento</label>
+    <input
+        type="date"
+        id="dataNascimento"
+        name="dataNascimento"
+        required
+    >
+
+    <label for="sexo">Sexo</label>
+    <select id="sexo" name="sexo" required>
+        <option value="">Selecione</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Feminino">Feminino</option>
+    </select>
+
+    <label for="nomeMae">Nome da mãe</label>
+    <input
+        type="text"
+        id="nomeMae"
+        name="nomeMae"
+        placeholder="Nome completo da mãe"
+    >
+
+    <label for="estadoCivil">Estado civil</label>
+    <select id="estadoCivil" name="estadoCivil">
+        <option value="">Selecione</option>
+        <option value="Solteiro(a)">Solteiro(a)</option>
+        <option value="Casado(a)">Casado(a)</option>
+        <option value="Divorciado(a)">Divorciado(a)</option>
+        <option value="Viúvo(a)">Viúvo(a)</option>
+        <option value="Separado(a)">Separado(a)</option>
+        <option value="União estável">União estável</option>
+    </select>
+
+
+    <!-- Endereço -->
+    <h3>Endereço</h3>
+
+    <label for="cep">CEP</label>
+    <input
+        type="text"
+        id="cep"
+        name="cep"
+        placeholder="00000-000"
+        maxlength="9"
+    >
+
+    <label for="logradouro">Rua / Logradouro</label>
+    <input
+        type="text"
+        id="logradouro"
+        name="logradouro"
+        placeholder="Rua, avenida, etc."
+    >
+
+    <label for="numero">Número</label>
+    <input
+        type="text"
+        id="numero"
+        name="numero"
+        placeholder="Número"
+    >
+
+    <label for="complemento">Complemento</label>
+    <input
+        type="text"
+        id="complemento"
+        name="complemento"
+        placeholder="Apartamento, casa, bloco..."
+    >
+
+    <label for="bairro">Bairro</label>
+    <input
+        type="text"
+        id="bairro"
+        name="bairro"
+        placeholder="Bairro"
+    >
+
+    <label for="cidade">Cidade</label>
+    <input
+        type="text"
+        id="cidade"
+        name="cidade"
+        placeholder="Cidade"
+    >
+
+    <label for="estado">Estado</label>
+    <select id="estado" name="estado">
+        <option value="">Selecione</option>
+        <option value="AC">Acre</option>
+        <option value="AL">Alagoas</option>
+        <option value="AP">Amapá</option>
+        <option value="AM">Amazonas</option>
+        <option value="BA">Bahia</option>
+        <option value="CE">Ceará</option>
+        <option value="DF">Distrito Federal</option>
+        <option value="ES">Espírito Santo</option>
+        <option value="GO">Goiás</option>
+        <option value="MA">Maranhão</option>
+        <option value="MT">Mato Grosso</option>
+        <option value="MS">Mato Grosso do Sul</option>
+        <option value="MG">Minas Gerais</option>
+        <option value="PA">Pará</option>
+        <option value="PB">Paraíba</option>
+        <option value="PR">Paraná</option>
+        <option value="PE">Pernambuco</option>
+        <option value="PI">Piauí</option>
+        <option value="RJ">Rio de Janeiro</option>
+        <option value="RN">Rio Grande do Norte</option>
+        <option value="RS">Rio Grande do Sul</option>
+        <option value="RO">Rondônia</option>
+        <option value="RR">Roraima</option>
+        <option value="SC">Santa Catarina</option>
+        <option value="SP">São Paulo</option>
+        <option value="SE">Sergipe</option>
+        <option value="TO">Tocantins</option>
+    </select>
+
+
+    <!-- Contato -->
+    <h3>Contato</h3>
+
+    <label for="telefone">Telefone</label>
+    <input
+        type="tel"
+        id="telefone"
+        name="telefone"
+        placeholder="(00) 00000-0000"
+    >
+
+    <label for="email">E-mail</label>
+    <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="exemplo@email.com"
+    >
+
+
+    <!-- Contato de emergência -->
+    <h3>Contato de emergência</h3>
+
+    <label for="contatoEmergencia">Nome do contato</label>
+    <input
+        type="text"
+        id="contatoEmergencia"
+        name="contatoEmergencia"
+        placeholder="Nome completo"
+    >
+
+    <label for="telefoneEmergencia">Telefone do contato</label>
+    <input
+        type="tel"
+        id="telefoneEmergencia"
+        name="telefoneEmergencia"
+        placeholder="(00) 00000-0000"
+    >
+
+    <label for="parentesco">Parentesco</label>
+    <select id="parentesco" name="parentesco">
+        <option value="">Selecione</option>
+        <option value="Mãe">Mãe</option>
+        <option value="Pai">Pai</option>
+        <option value="Filho(a)">Filho(a)</option>
+        <option value="Irmão(ã)">Irmão(ã)</option>
+        <option value="Cônjuge">Cônjuge</option>
+        <option value="Outro">Outro</option>
+    </select>
+
+
+    <!-- Atendimento -->
+    <h3>Tipo de atendimento</h3>
+
+    <label for="tipo">Forma de pagamento</label>
+    <select id="tipo" name="tipo" required>
+        <option value="">Selecione</option>
+        <option value="Convenio">Convênio</option>
+        <option value="Particular">Particular</option>
+    </select>
+
+    <label for="convenio">Convênio</label>
+    <select id="convenio" name="convenio">
+        <option value="">Selecione o convênio</option>
+        <option value="Unimed">Unimed</option>
+        <option value="Amil">Amil</option>
+        <option value="Bradesco Saúde">Bradesco Saúde</option>
+        <option value="SulAmérica">SulAmérica</option>
+        <option value="Hapvida">Hapvida</option>
+        <option value="Outro">Outro</option>
+    </select>
+
+
+    <!-- Foto -->
+    <h3>Foto do paciente</h3>
+
+    <label for="foto">Selecionar foto</label>
+    <input
+        type="file"
+        id="foto"
+        name="foto"
+        accept="image/*"
+    >
+
+    <button type="button" onclick="cadastrar()">
+        Cadastrar
+    </button>
+
 </div>
 
+
 <script>
-function cadastrar(){
- fetch("http://localhost:3000/atendimento",{
-  method:"POST",
-  headers:{"Content-Type":"application/json"},
-  body: JSON.stringify({
-    nome: nome.value,
-    cpf: cpf.value,
-    tipo: tipo.value
-  })
- });
- alert("Paciente enviado para triagem");
+
+function cadastrar() {
+
+    const dados = {
+        nome: document.getElementById("nome").value,
+        cpf: document.getElementById("cpf").value,
+        dataNascimento: document.getElementById("dataNascimento").value,
+        sexo: document.getElementById("sexo").value,
+        nomeMae: document.getElementById("nomeMae").value,
+        estadoCivil: document.getElementById("estadoCivil").value,
+
+        endereco: {
+            cep: document.getElementById("cep").value,
+            logradouro: document.getElementById("logradouro").value,
+            numero: document.getElementById("numero").value,
+            complemento: document.getElementById("complemento").value,
+            bairro: document.getElementById("bairro").value,
+            cidade: document.getElementById("cidade").value,
+            estado: document.getElementById("estado").value
+        },
+
+        telefone: document.getElementById("telefone").value,
+        email: document.getElementById("email").value,
+
+        contatoEmergencia: {
+            nome: document.getElementById("contatoEmergencia").value,
+            telefone: document.getElementById("telefoneEmergencia").value,
+            parentesco: document.getElementById("parentesco").value
+        },
+
+        tipo: document.getElementById("tipo").value,
+        convenio: document.getElementById("convenio").value
+    };
+
+
+    fetch("http://localhost:3000/atendimento", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(dados)
+
+    })
+    .then(response => {
+
+        if (!response.ok) {
+            throw new Error("Erro ao cadastrar paciente");
+        }
+
+        return response.json();
+
+    })
+    .then(data => {
+
+        alert("Paciente enviado para triagem!");
+
+    })
+    .catch(error => {
+
+        console.error(error);
+        alert("Não foi possível cadastrar o paciente.");
+
+    });
+
 }
+
 </script>
+
 </body>
 </html>
