@@ -67,13 +67,13 @@ app.post("/login", (req, res) => {
 // ATENDIMENTO
 // ==============================
 
+// ATENDIMENTO
 app.post("/atendimento", (req, res) => {
   const db = readDB();
 
   const paciente = {
     id: Date.now(),
 
-    // Dados pessoais
     nome: req.body.nome || "",
     cpf: req.body.cpf || "",
     dataNascimento: req.body.dataNascimento || "",
@@ -81,7 +81,6 @@ app.post("/atendimento", (req, res) => {
     nomeMae: req.body.nomeMae || "",
     estadoCivil: req.body.estadoCivil || "",
 
-    // Endereço
     endereco: {
       cep: req.body.endereco?.cep || "",
       logradouro: req.body.endereco?.logradouro || "",
@@ -92,25 +91,20 @@ app.post("/atendimento", (req, res) => {
       estado: req.body.endereco?.estado || ""
     },
 
-    // Contato
     telefone: req.body.telefone || "",
     email: req.body.email || "",
 
-    // Contato de emergência
     contatoEmergencia: {
       nome: req.body.contatoEmergencia?.nome || "",
       telefone: req.body.contatoEmergencia?.telefone || "",
       parentesco: req.body.contatoEmergencia?.parentesco || ""
     },
 
-    // Tipo de atendimento
     tipo: req.body.tipo || "",
     convenio: req.body.convenio || "",
 
-    // Status
     status: "triagem",
 
-    // Data de cadastro
     createdAt: new Date().toISOString()
   };
 
@@ -118,8 +112,20 @@ app.post("/atendimento", (req, res) => {
 
   writeDB(db);
 
+  console.log("PACIENTE CADASTRADO:");
+  console.log(paciente);
+
   res.status(201).json(paciente);
 });
+
+
+// LISTAR PACIENTES
+app.get("/pacientes", (req, res) => {
+  const db = readDB();
+
+  res.json(db.pacientes);
+});
+
 
 
 // ==============================
