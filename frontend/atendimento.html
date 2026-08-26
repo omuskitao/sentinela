@@ -248,7 +248,7 @@
 
 <script>
 
-function cadastrar() {
+async function cadastrar() {
 
     const dados = {
         nome: document.getElementById("nome").value,
@@ -281,40 +281,54 @@ function cadastrar() {
         convenio: document.getElementById("convenio").value
     };
 
+    console.log("Dados enviados:", dados);
 
-    fetch("http://localhost:3000/atendimento", {
+    try {
 
-        method: "POST",
+        const response = await fetch("http://localhost:3000/atendimento", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dados)
+        });
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+        const resultado = await response.json();
 
-        body: JSON.stringify(dados)
-
-    })
-    .then(response => {
+        console.log("Resposta do servidor:", resultado);
 
         if (!response.ok) {
-            throw new Error("Erro ao cadastrar paciente");
+            throw new Error(
+                resultado.erro ||
+                resultado.error ||
+                "Erro ao cadastrar paciente"
+            );
         }
 
-        return response.json();
+        alert("Paciente cadastrado com sucesso!");
 
-    })
-    .then(data => {
+        // Limpa o formulário
+        document.querySelectorAll("input").forEach(input => {
+            if (input.type !== "file") {
+                input.value = "";
+            }
+        });
 
-        alert("Paciente enviado para triagem!");
+        document.querySelectorAll("select").forEach(select => {
+            select.selectedIndex = 0;
+        });
 
-    })
-    .catch(error => {
+    } catch (error) {
 
-        console.error(error);
-        alert("Não foi possível cadastrar o paciente.");
+        console.error("ERRO NO CADASTRO:", error);
 
-    });
-
+        alert(
+            "Erro ao cadastrar paciente:\n\n" +
+            error.message
+        );
+    }
 }
+
 
 </script>
 
