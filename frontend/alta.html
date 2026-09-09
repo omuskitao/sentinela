@@ -1,0 +1,2137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <title>Alta Hospitalar | Sentinela</title>
+
+    <style>
+        /* =========================================================
+           ESTILOS ESPECÍFICOS DA PÁGINA DE ALTA
+           ========================================================= */
+
+        :root {
+            --alta-primary: #1677a8;
+            --alta-primary-dark: #0d5275;
+            --alta-success: #16865c;
+            --alta-danger: #c0392b;
+            --alta-border: #dce4e8;
+            --alta-background: #f4f7f9;
+            --alta-text: #263238;
+            --alta-muted: #6b7880;
+        }
+
+        body {
+            background: var(--alta-background);
+        }
+
+        .alta-page {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 25px;
+        }
+
+        /* Cabeçalho */
+
+        .alta-header {
+            background: linear-gradient(135deg, #0d5275, #1677a8);
+            color: white;
+            border-radius: 14px;
+            padding: 25px 30px;
+            margin-bottom: 22px;
+            box-shadow: 0 6px 20px rgba(13, 82, 117, 0.18);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .system-name {
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .alta-header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .alta-header p {
+            margin: 7px 0 0;
+            opacity: 0.88;
+        }
+
+        .btn-voltar {
+            border: 1px solid rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.12);
+            color: white;
+            padding: 11px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn-voltar:hover {
+            background: rgba(255,255,255,0.22);
+        }
+
+        /* Formulário */
+
+        .alta-section {
+            background: white;
+            border: 1px solid var(--alta-border);
+            border-radius: 13px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+        }
+
+        .section-header {
+            padding: 16px 20px;
+            background: #f8fafb;
+            border-bottom: 1px solid var(--alta-border);
+        }
+
+        .section-header h2 {
+            margin: 0;
+            color: var(--alta-primary-dark);
+            font-size: 18px;
+        }
+
+        .section-header p {
+            margin: 5px 0 0;
+            color: var(--alta-muted);
+            font-size: 13px;
+        }
+
+        .section-body {
+            padding: 22px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .form-grid.three {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            font-size: 14px;
+            color: var(--alta-text);
+            margin-bottom: 7px;
+        }
+
+        .required {
+            color: var(--alta-danger);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 11px 13px;
+            border: 1px solid #ccd7dc;
+            border-radius: 8px;
+            background: white;
+            color: var(--alta-text);
+            font-size: 14px;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--alta-primary);
+            box-shadow: 0 0 0 3px rgba(22,119,168,0.10);
+        }
+
+        .form-group textarea {
+            min-height: 105px;
+            resize: vertical;
+        }
+
+        .patient-highlight {
+            border: 2px solid var(--alta-primary) !important;
+            background: #f5fbfe !important;
+            font-size: 16px !important;
+            font-weight: bold;
+        }
+
+        /* Medicamentos */
+
+        .medication-form {
+            background: #f8fafb;
+            border: 1px solid var(--alta-border);
+            border-radius: 10px;
+            padding: 17px;
+            margin-bottom: 18px;
+        }
+
+        .medication-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.3fr 1fr;
+            gap: 12px;
+        }
+
+        .medication-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .medication-field label {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--alta-muted);
+        }
+
+        .medication-field input {
+            padding: 9px;
+            border: 1px solid #ccd7dc;
+            border-radius: 7px;
+            font-family: inherit;
+        }
+
+        .medication-observacao {
+            margin-top: 12px;
+        }
+
+        .medication-observacao input {
+            width: 100%;
+            padding: 9px;
+            border: 1px solid #ccd7dc;
+            border-radius: 7px;
+        }
+
+        .btn-adicionar {
+            margin-top: 13px;
+            background: var(--alta-primary);
+            color: white;
+            border: none;
+            border-radius: 7px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-adicionar:hover {
+            background: var(--alta-primary-dark);
+        }
+
+        .medication-table-wrapper {
+            overflow-x: auto;
+        }
+
+        .medication-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .medication-table th,
+        .medication-table td {
+            border-bottom: 1px solid var(--alta-border);
+            padding: 11px 9px;
+            text-align: left;
+        }
+
+        .medication-table th {
+            background: #f3f6f8;
+            color: var(--alta-text);
+        }
+
+        .btn-remover {
+            background: #fff1ef;
+            color: var(--alta-danger);
+            border: 1px solid #f0c8c3;
+            border-radius: 6px;
+            padding: 6px 9px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .sem-medicamentos {
+            text-align: center;
+            color: var(--alta-muted);
+            padding: 15px;
+            font-size: 13px;
+        }
+
+        /* Assinatura */
+
+        .assinatura-area {
+            margin-top: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .assinatura-box {
+            border-top: 1px solid #6c757d;
+            padding-top: 8px;
+            text-align: center;
+            color: var(--alta-muted);
+            font-size: 13px;
+            min-height: 55px;
+        }
+
+        /* Botões finais */
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 20px 0 35px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .btn-salvar {
+            background: var(--alta-success);
+            color: white;
+        }
+
+        .btn-salvar:hover {
+            filter: brightness(0.92);
+        }
+
+        .btn-pdf {
+            background: var(--alta-primary);
+            color: white;
+        }
+
+        .btn-pdf:hover {
+            background: var(--alta-primary-dark);
+        }
+
+        /* Mensagens */
+
+        #mensagem {
+            display: none;
+            padding: 13px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        #mensagem.sucesso {
+            display: block;
+            background: #eaf8f1;
+            border: 1px solid #b8e4cf;
+            color: #146c48;
+        }
+
+        #mensagem.erro {
+            display: block;
+            background: #fff0ee;
+            border: 1px solid #efc4be;
+            color: #9f3026;
+        }
+
+        /* =========================================================
+           DOCUMENTO PARA IMPRESSÃO
+           ========================================================= */
+
+        #documentoAlta {
+            display: none;
+        }
+
+        .documento {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 18mm;
+            color: #111;
+            font-family: Arial, sans-serif;
+        }
+
+        .doc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #111;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .doc-instituicao {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .doc-subtitle {
+            font-size: 11px;
+            color: #555;
+            margin-top: 4px;
+        }
+
+        .doc-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 18px 0;
+            text-transform: uppercase;
+        }
+
+        .doc-section {
+            margin-top: 18px;
+        }
+
+        .doc-section h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #aaa;
+            padding-bottom: 5px;
+            margin-bottom: 9px;
+        }
+
+        .doc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px 20px;
+            font-size: 11px;
+        }
+
+        .doc-grid .full {
+            grid-column: 1 / -1;
+        }
+
+        .doc-label {
+            font-weight: bold;
+        }
+
+        .doc-text {
+            font-size: 11px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .doc-medications {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+
+        .doc-medications th,
+        .doc-medications td {
+            border: 1px solid #999;
+            padding: 6px;
+            text-align: left;
+        }
+
+        .doc-medications th {
+            background: #eeeeee;
+        }
+
+        .doc-signature {
+            margin-top: 45px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        .doc-signature-line {
+            border-top: 1px solid #111;
+            padding-top: 7px;
+        }
+
+        .doc-footer {
+            margin-top: 35px;
+            border-top: 1px solid #aaa;
+            padding-top: 7px;
+            font-size: 8px;
+            color: #555;
+            text-align: center;
+        }
+
+        /* Responsividade */
+
+        @media (max-width: 800px) {
+
+            .alta-page {
+                padding: 12px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .form-grid,
+            .form-grid.three,
+            .assinatura-area {
+                grid-template-columns: 1fr;
+            }
+
+            .medication-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* =========================================================
+           IMPRESSÃO
+           ========================================================= */
+
+        @media print {
+
+            @page {
+                size: A4;
+                margin: 0;
+            }
+
+            body {
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            body * {
+                visibility: hidden !important;
+            }
+
+            #documentoAlta,
+            #documentoAlta * {
+                visibility: visible !important;
+            }
+
+            #documentoAlta {
+                display: block !important;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 210mm;
+                min-height: 297mm;
+                margin: 0;
+                padding: 18mm;
+            }
+
+            .documento {
+                box-shadow: none !important;
+                margin: 0 !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="alta-page">
+
+    <!-- =====================================================
+         CABEÇALHO
+         ====================================================== -->
+
+    <header class="alta-header">
+
+        <div class="header-content">
+
+            <div>
+                <div class="system-name">
+                    SENTINELA — SISTEMA HOSPITALAR
+                </div>
+
+                <h1>Alta Hospitalar</h1>
+
+                <p>
+                    Registro e emissão de alta do paciente
+                </p>
+            </div>
+
+            <button
+                class="btn-voltar"
+                type="button"
+                onclick="window.location.href='medico.html'"
+            >
+                ← Voltar ao Painel Médico
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MENSAGEM
+         ====================================================== -->
+
+    <div id="mensagem"></div>
+
+
+    <!-- =====================================================
+         DADOS DO PACIENTE
+         ====================================================== -->
+
+    <section class="alta-section">
+
+        <div class="section-header">
+            <h2>Dados do paciente</h2>
+            <p>Identificação do paciente e informações administrativas.</p>
+        </div>
+
+        <div class="section-body">
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+
+                    <label for="nomePaciente">
+                        Nome completo <span class="required">*</span>
+                    </label>
+
+                    <input
+                        id="nomePaciente"
+                        type="text"
+                        class="patient-highlight"
+                        placeholder="Nome completo do paciente"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="cpf">
+                        CPF
+                    </label>
+
+                    <input
+                        id="cpf"
+                        type="text"
+                        placeholder="000.000.000-00"
+                        maxlength="14"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="prontuario">
+                        Número do prontuário
+                    </label>
+
+                    <input
+                        id="prontuario"
+                        type="text"
+                        placeholder="Número do prontuário"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="dataNascimento">
+                        Data de nascimento
+                    </label>
+
+                    <input
+                        id="dataNascimento"
+                        type="date"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="dataEntrada">
+                        Data de entrada
+                    </label>
+
+                    <input
+                        id="dataEntrada"
+                        type="date"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="dataAlta">
+                        Data da alta <span class="required">*</span>
+                    </label>
+
+                    <input
+                        id="dataAlta"
+                        type="date"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="medico">
+                        Médico responsável <span class="required">*</span>
+                    </label>
+
+                    <input
+                        id="medico"
+                        type="text"
+                        placeholder="Nome completo do médico"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         INFORMAÇÕES DA INTERNAÇÃO
+         ====================================================== -->
+
+    <section class="alta-section">
+
+        <div class="section-header">
+            <h2>Informações da internação</h2>
+            <p>Resumo do atendimento e evolução clínica.</p>
+        </div>
+
+        <div class="section-body">
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+
+                    <label for="motivoInternacao">
+                        Motivo da internação
+                    </label>
+
+                    <textarea
+                        id="motivoInternacao"
+                        placeholder="Descreva o motivo da internação..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label for="diagnostico">
+                        Diagnóstico principal <span class="required">*</span>
+                    </label>
+
+                    <textarea
+                        id="diagnostico"
+                        placeholder="Informe o diagnóstico principal..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label for="diagnosticosSecundarios">
+                        Diagnósticos secundários
+                    </label>
+
+                    <textarea
+                        id="diagnosticosSecundarios"
+                        placeholder="Informe outros diagnósticos, se houver..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label for="procedimentos">
+                        Procedimentos realizados
+                    </label>
+
+                    <textarea
+                        id="procedimentos"
+                        placeholder="Descreva os procedimentos realizados durante a internação..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label for="evolucao">
+                        Evolução clínica
+                    </label>
+
+                    <textarea
+                        id="evolucao"
+                        placeholder="Descreva a evolução clínica do paciente..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="condicaoAlta">
+                        Condição do paciente no momento da alta
+                        <span class="required">*</span>
+                    </label>
+
+                    <select id="condicaoAlta" required>
+
+                        <option value="">
+                            Selecione
+                        </option>
+
+                        <option value="Alta por melhora">
+                            Alta por melhora
+                        </option>
+
+                        <option value="Alta médica">
+                            Alta médica
+                        </option>
+
+                        <option value="Alta para acompanhamento ambulatorial">
+                            Alta para acompanhamento ambulatorial
+                        </option>
+
+                        <option value="Transferência">
+                            Transferência
+                        </option>
+
+                        <option value="Outros">
+                            Outros
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ORIENTAÇÕES
+         ====================================================== -->
+
+    <section class="alta-section">
+
+        <div class="section-header">
+            <h2>Orientações pós-alta</h2>
+            <p>Recomendações fornecidas ao paciente.</p>
+        </div>
+
+        <div class="section-body">
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+
+                    <label for="orientacoesGerais">
+                        Orientações gerais
+                    </label>
+
+                    <textarea
+                        id="orientacoesGerais"
+                        placeholder="Informe as orientações gerais..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="cuidadosCasa">
+                        Cuidados em casa
+                    </label>
+
+                    <textarea
+                        id="cuidadosCasa"
+                        placeholder="Cuidados que devem ser realizados em casa..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="alimentacao">
+                        Alimentação
+                    </label>
+
+                    <textarea
+                        id="alimentacao"
+                        placeholder="Orientações relacionadas à alimentação..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="atividades">
+                        Atividades permitidas/recomendadas
+                    </label>
+
+                    <textarea
+                        id="atividades"
+                        placeholder="Informe atividades, repouso ou restrições..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="sinaisAlerta">
+                        Sinais de alerta
+                    </label>
+
+                    <textarea
+                        id="sinaisAlerta"
+                        placeholder="Informe sinais que exigem atenção médica..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label for="retorno">
+                        Retorno / consulta de acompanhamento
+                    </label>
+
+                    <textarea
+                        id="retorno"
+                        placeholder="Informe orientações sobre retorno ou acompanhamento..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MEDICAÇÕES
+         ====================================================== -->
+
+    <section class="alta-section">
+
+        <div class="section-header">
+            <h2>Medicações prescritas na alta</h2>
+            <p>Adicione as medicações que deverão ser utilizadas após a alta.</p>
+        </div>
+
+        <div class="section-body">
+
+            <div class="medication-form">
+
+                <div class="medication-grid">
+
+                    <div class="medication-field">
+
+                        <label for="medNome">
+                            Medicamento
+                        </label>
+
+                        <input
+                            id="medNome"
+                            type="text"
+                            placeholder="Nome do medicamento"
+                        >
+
+                    </div>
+
+
+                    <div class="medication-field">
+
+                        <label for="medDosagem">
+                            Dosagem
+                        </label>
+
+                        <input
+                            id="medDosagem"
+                            type="text"
+                            placeholder="Ex.: 500 mg"
+                        >
+
+                    </div>
+
+
+                    <div class="medication-field">
+
+                        <label for="medFrequencia">
+                            Frequência
+                        </label>
+
+                        <input
+                            id="medFrequencia"
+                            type="text"
+                            placeholder="Ex.: 8/8h"
+                        >
+
+                    </div>
+
+
+                    <div class="medication-field">
+
+                        <label for="medDuracao">
+                            Duração
+                        </label>
+
+                        <input
+                            id="medDuracao"
+                            type="text"
+                            placeholder="Ex.: 7 dias"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="medication-observacao">
+
+                    <input
+                        id="medObservacao"
+                        type="text"
+                        placeholder="Observações sobre esta medicação"
+                    >
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="btn-adicionar"
+                    onclick="adicionarMedicacao()"
+                >
+                    + Adicionar medicação
+                </button>
+
+            </div>
+
+
+            <div class="medication-table-wrapper">
+
+                <table class="medication-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Medicamento</th>
+                            <th>Dosagem</th>
+                            <th>Frequência</th>
+                            <th>Duração</th>
+                            <th>Observações</th>
+                            <th>Ação</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="listaMedicamentos">
+
+                        <tr id="semMedicamentos">
+
+                            <td colspan="6" class="sem-medicamentos">
+                                Nenhuma medicação adicionada.
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         OBSERVAÇÕES FINAIS
+         ====================================================== -->
+
+    <section class="alta-section">
+
+        <div class="section-header">
+            <h2>Observações finais</h2>
+            <p>Informações adicionais relevantes para o encerramento do atendimento.</p>
+        </div>
+
+        <div class="section-body">
+
+            <div class="form-group">
+
+                <label for="observacoes">
+                    Observações médicas
+                </label>
+
+                <textarea
+                    id="observacoes"
+                    placeholder="Digite observações adicionais..."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ASSINATURA
+         ====================================================== -->
+
+    <section class="alta-section">
+
+        <div class="section-header">
+            <h2>Identificação e assinatura</h2>
+            <p>Dados do profissional responsável pela emissão da alta.</p>
+        </div>
+
+        <div class="section-body">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="nomeMedico">
+                        Nome do médico <span class="required">*</span>
+                    </label>
+
+                    <input
+                        id="nomeMedico"
+                        type="text"
+                        placeholder="Nome completo"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="crm">
+                        CRM
+                    </label>
+
+                    <input
+                        id="crm"
+                        type="text"
+                        placeholder="CRM / UF"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="dataEmissao">
+                        Data da emissão
+                    </label>
+
+                    <input
+                        id="dataEmissao"
+                        type="date"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="assinatura-area">
+
+                <div class="assinatura-box">
+                    Assinatura do médico responsável
+                </div>
+
+                <div class="assinatura-box">
+                    Assinatura / ciência do paciente ou responsável
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         BOTÕES
+         ====================================================== -->
+
+    <div class="actions">
+
+        <button
+            type="button"
+            class="btn btn-salvar"
+            onclick="salvarAlta()"
+        >
+            Salvar Alta
+        </button>
+
+        <button
+            type="button"
+            class="btn btn-pdf"
+            onclick="gerarPDF()"
+        >
+            Gerar Alta em PDF
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     DOCUMENTO GERADO PARA IMPRESSÃO
+     ========================================================== -->
+
+<div id="documentoAlta">
+
+    <div class="documento">
+
+        <div class="doc-header">
+
+            <div>
+
+                <div class="doc-instituicao">
+                    SENTINELA — SISTEMA HOSPITALAR
+                </div>
+
+                <div class="doc-subtitle">
+                    Documento de alta hospitalar
+                </div>
+
+            </div>
+
+            <div>
+                <strong>ALTA</strong>
+            </div>
+
+        </div>
+
+
+        <div class="doc-title">
+            Alta Hospitalar
+        </div>
+
+
+        <!-- Paciente -->
+
+        <div class="doc-section">
+
+            <h3>Dados do paciente</h3>
+
+            <div class="doc-grid">
+
+                <div class="full">
+                    <span class="doc-label">Nome:</span>
+                    <span id="docNome"></span>
+                </div>
+
+                <div>
+                    <span class="doc-label">CPF:</span>
+                    <span id="docCpf"></span>
+                </div>
+
+                <div>
+                    <span class="doc-label">Prontuário:</span>
+                    <span id="docProntuario"></span>
+                </div>
+
+                <div>
+                    <span class="doc-label">Nascimento:</span>
+                    <span id="docNascimento"></span>
+                </div>
+
+                <div>
+                    <span class="doc-label">Entrada:</span>
+                    <span id="docEntrada"></span>
+                </div>
+
+                <div>
+                    <span class="doc-label">Alta:</span>
+                    <span id="docAlta"></span>
+                </div>
+
+                <div>
+                    <span class="doc-label">Médico responsável:</span>
+                    <span id="docMedico"></span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Internação -->
+
+        <div class="doc-section">
+
+            <h3>Informações da internação</h3>
+
+            <div class="doc-text">
+
+                <strong>Motivo da internação:</strong>
+                <div id="docMotivo"></div>
+
+                <br>
+
+                <strong>Diagnóstico principal:</strong>
+                <div id="docDiagnostico"></div>
+
+                <br>
+
+                <strong>Diagnósticos secundários:</strong>
+                <div id="docSecundarios"></div>
+
+                <br>
+
+                <strong>Procedimentos realizados:</strong>
+                <div id="docProcedimentos"></div>
+
+                <br>
+
+                <strong>Evolução clínica:</strong>
+                <div id="docEvolucao"></div>
+
+                <br>
+
+                <strong>Condição na alta:</strong>
+                <div id="docCondicao"></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Orientações -->
+
+        <div class="doc-section">
+
+            <h3>Orientações pós-alta</h3>
+
+            <div class="doc-text">
+
+                <strong>Orientações gerais:</strong>
+                <div id="docOrientacoes"></div>
+
+                <br>
+
+                <strong>Cuidados em casa:</strong>
+                <div id="docCuidados"></div>
+
+                <br>
+
+                <strong>Alimentação:</strong>
+                <div id="docAlimentacao"></div>
+
+                <br>
+
+                <strong>Atividades:</strong>
+                <div id="docAtividades"></div>
+
+                <br>
+
+                <strong>Sinais de alerta:</strong>
+                <div id="docSinais"></div>
+
+                <br>
+
+                <strong>Retorno:</strong>
+                <div id="docRetorno"></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Medicamentos -->
+
+        <div class="doc-section">
+
+            <h3>Medicações prescritas na alta</h3>
+
+            <table class="doc-medications">
+
+                <thead>
+
+                    <tr>
+                        <th>Medicamento</th>
+                        <th>Dosagem</th>
+                        <th>Frequência</th>
+                        <th>Duração</th>
+                        <th>Observações</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="docMedicamentos"></tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- Observações -->
+
+        <div class="doc-section">
+
+            <h3>Observações finais</h3>
+
+            <div
+                id="docObservacoes"
+                class="doc-text"
+            ></div>
+
+        </div>
+
+
+        <!-- Assinaturas -->
+
+        <div class="doc-signature">
+
+            <div class="doc-signature-line">
+
+                <strong id="docNomeMedico"></strong>
+                <br>
+                CRM: <span id="docCrm"></span>
+
+            </div>
+
+            <div class="doc-signature-line">
+
+                Data da emissão:
+                <span id="docDataEmissao"></span>
+
+            </div>
+
+        </div>
+
+
+        <div class="doc-footer">
+
+            SENTINELA — SISTEMA HOSPITALAR |
+            Documento gerado para fins de registro hospitalar.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =========================================================
+       VARIÁVEIS
+       ========================================================== */
+
+    let medicamentos = [];
+
+
+    /* =========================================================
+       DATA ATUAL
+       ========================================================== */
+
+    function definirDataAtual() {
+
+        const hoje = new Date();
+
+        const ano = hoje.getFullYear();
+
+        const mes = String(
+            hoje.getMonth() + 1
+        ).padStart(2, "0");
+
+        const dia = String(
+            hoje.getDate()
+        ).padStart(2, "0");
+
+        const data = `${ano}-${mes}-${dia}`;
+
+        document.getElementById("dataAlta").value = data;
+        document.getElementById("dataEmissao").value = data;
+    }
+
+
+    /* =========================================================
+       FORMATAR DATA
+       ========================================================== */
+
+    function formatarData(data) {
+
+        if (!data) {
+            return "";
+        }
+
+        const partes = data.split("-");
+
+        if (partes.length !== 3) {
+            return data;
+        }
+
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
+
+
+    /* =========================================================
+       MENSAGEM
+       ========================================================== */
+
+    function mostrarMensagem(texto, tipo) {
+
+        const mensagem =
+            document.getElementById("mensagem");
+
+        mensagem.className = tipo;
+        mensagem.textContent = texto;
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+        setTimeout(() => {
+
+            mensagem.className = "";
+            mensagem.textContent = "";
+
+        }, 5000);
+    }
+
+
+    /* =========================================================
+       ADICIONAR MEDICAÇÃO
+       ========================================================== */
+
+    function adicionarMedicacao() {
+
+        const nome =
+            document.getElementById("medNome").value.trim();
+
+        const dosagem =
+            document.getElementById("medDosagem").value.trim();
+
+        const frequencia =
+            document.getElementById("medFrequencia").value.trim();
+
+        const duracao =
+            document.getElementById("medDuracao").value.trim();
+
+        const observacao =
+            document.getElementById("medObservacao").value.trim();
+
+
+        if (!nome) {
+
+            alert("Informe o nome da medicação.");
+
+            return;
+        }
+
+
+        const medicamento = {
+
+            nome,
+            dosagem,
+            frequencia,
+            duracao,
+            observacao
+
+        };
+
+
+        medicamentos.push(medicamento);
+
+
+        atualizarTabelaMedicamentos();
+
+
+        document.getElementById("medNome").value = "";
+        document.getElementById("medDosagem").value = "";
+        document.getElementById("medFrequencia").value = "";
+        document.getElementById("medDuracao").value = "";
+        document.getElementById("medObservacao").value = "";
+
+    }
+
+
+    /* =========================================================
+       ATUALIZAR TABELA
+       ========================================================== */
+
+    function atualizarTabelaMedicamentos() {
+
+        const tabela =
+            document.getElementById("listaMedicamentos");
+
+        tabela.innerHTML = "";
+
+
+        if (medicamentos.length === 0) {
+
+            tabela.innerHTML = `
+                <tr>
+                    <td
+                        colspan="6"
+                        class="sem-medicamentos"
+                    >
+                        Nenhuma medicação adicionada.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+
+        medicamentos.forEach((med, index) => {
+
+            const tr =
+                document.createElement("tr");
+
+
+            tr.innerHTML = `
+                <td>${escaparHTML(med.nome)}</td>
+                <td>${escaparHTML(med.dosagem)}</td>
+                <td>${escaparHTML(med.frequencia)}</td>
+                <td>${escaparHTML(med.duracao)}</td>
+                <td>${escaparHTML(med.observacao || "—")}</td>
+                <td>
+                    <button
+                        type="button"
+                        class="btn-remover"
+                        onclick="removerMedicacao(${index})"
+                    >
+                        Remover
+                    </button>
+                </td>
+            `;
+
+
+            tabela.appendChild(tr);
+
+        });
+
+    }
+
+
+    /* =========================================================
+       REMOVER MEDICAÇÃO
+       ========================================================== */
+
+    function removerMedicacao(index) {
+
+        medicamentos.splice(index, 1);
+
+        atualizarTabelaMedicamentos();
+
+    }
+
+
+    /* =========================================================
+       ESCAPAR HTML
+       ========================================================== */
+
+    function escaparHTML(texto) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent = texto || "";
+
+        return div.innerHTML;
+
+    }
+
+
+    /* =========================================================
+       VALIDAR FORMULÁRIO
+       ========================================================== */
+
+    function validarFormulario() {
+
+        const nome =
+            document.getElementById("nomePaciente").value.trim();
+
+        const diagnostico =
+            document.getElementById("diagnostico").value.trim();
+
+        const condicao =
+            document.getElementById("condicaoAlta").value;
+
+        const dataAlta =
+            document.getElementById("dataAlta").value;
+
+        const medico =
+            document.getElementById("nomeMedico").value.trim();
+
+
+        if (!nome) {
+
+            alert("Informe o nome do paciente.");
+
+            document.getElementById("nomePaciente").focus();
+
+            return false;
+        }
+
+
+        if (!diagnostico) {
+
+            alert("Informe o diagnóstico principal.");
+
+            document.getElementById("diagnostico").focus();
+
+            return false;
+        }
+
+
+        if (!condicao) {
+
+            alert("Selecione a condição do paciente no momento da alta.");
+
+            document.getElementById("condicaoAlta").focus();
+
+            return false;
+        }
+
+
+        if (!dataAlta) {
+
+            alert("Informe a data da alta.");
+
+            document.getElementById("dataAlta").focus();
+
+            return false;
+        }
+
+
+        if (!medico) {
+
+            alert("Informe o médico responsável.");
+
+            document.getElementById("nomeMedico").focus();
+
+            return false;
+        }
+
+
+        return true;
+
+    }
+
+
+    /* =========================================================
+       COLETAR DADOS
+       ========================================================== */
+
+    function coletarDados() {
+
+        return {
+
+            paciente: {
+
+                nome:
+                    document.getElementById("nomePaciente").value,
+
+                cpf:
+                    document.getElementById("cpf").value,
+
+                dataNascimento:
+                    document.getElementById("dataNascimento").value,
+
+                prontuario:
+                    document.getElementById("prontuario").value
+
+            },
+
+
+            internacao: {
+
+                dataEntrada:
+                    document.getElementById("dataEntrada").value,
+
+                dataAlta:
+                    document.getElementById("dataAlta").value,
+
+                motivo:
+                    document.getElementById("motivoInternacao").value
+
+            },
+
+
+            diagnostico:
+                document.getElementById("diagnostico").value,
+
+            diagnosticosSecundarios:
+                document.getElementById("diagnosticosSecundarios").value,
+
+            procedimentos:
+                document.getElementById("procedimentos").value,
+
+            evolucao:
+                document.getElementById("evolucao").value,
+
+            condicaoAlta:
+                document.getElementById("condicaoAlta").value,
+
+
+            orientacoes: {
+
+                gerais:
+                    document.getElementById("orientacoesGerais").value,
+
+                cuidadosCasa:
+                    document.getElementById("cuidadosCasa").value,
+
+                alimentacao:
+                    document.getElementById("alimentacao").value,
+
+                atividades:
+                    document.getElementById("atividades").value,
+
+                sinaisAlerta:
+                    document.getElementById("sinaisAlerta").value,
+
+                retorno:
+                    document.getElementById("retorno").value
+
+            },
+
+
+            medicamentos: medicamentos,
+
+
+            observacoes:
+                document.getElementById("observacoes").value,
+
+
+            medico: {
+
+                nome:
+                    document.getElementById("nomeMedico").value,
+
+                crm:
+                    document.getElementById("crm").value,
+
+                dataEmissao:
+                    document.getElementById("dataEmissao").value
+
+            }
+
+        };
+
+    }
+
+
+    /* =========================================================
+       SALVAR ALTA
+       ========================================================== */
+
+    async function salvarAlta() {
+
+        if (!validarFormulario()) {
+            return;
+        }
+
+
+        const dados = coletarDados();
+
+
+        try {
+
+            const response =
+                await fetch("/alta", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(dados)
+
+                });
+
+
+            let resultado = {};
+
+            try {
+                resultado = await response.json();
+            } catch (e) {
+                resultado = {};
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    resultado.erro ||
+                    resultado.error ||
+                    "Não foi possível salvar a alta."
+                );
+
+            }
+
+
+            mostrarMensagem(
+                "Alta hospitalar salva com sucesso.",
+                "sucesso"
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao salvar alta:",
+                error
+            );
+
+
+            mostrarMensagem(
+                "Não foi possível salvar a alta. Verifique se o backend possui o endpoint POST /alta.",
+                "erro"
+            );
+
+        }
+
+    }
+
+
+    /* =========================================================
+       PREENCHER DOCUMENTO
+       ========================================================== */
+
+    function preencherDocumento() {
+
+        const dados = coletarDados();
+
+
+        document.getElementById("docNome").textContent =
+            dados.paciente.nome || "Não informado";
+
+        document.getElementById("docCpf").textContent =
+            dados.paciente.cpf || "Não informado";
+
+        document.getElementById("docProntuario").textContent =
+            dados.paciente.prontuario || "Não informado";
+
+        document.getElementById("docNascimento").textContent =
+            formatarData(dados.paciente.dataNascimento) || "Não informado";
+
+        document.getElementById("docEntrada").textContent =
+            formatarData(dados.internacao.dataEntrada) || "Não informado";
+
+        document.getElementById("docAlta").textContent =
+            formatarData(dados.internacao.dataAlta) || "Não informado";
+
+        document.getElementById("docMedico").textContent =
+            dados.medico.nome || "Não informado";
+
+
+        document.getElementById("docMotivo").textContent =
+            dados.internacao.motivo || "Não informado";
+
+        document.getElementById("docDiagnostico").textContent =
+            dados.diagnostico || "Não informado";
+
+        document.getElementById("docSecundarios").textContent =
+            dados.diagnosticosSecundarios || "Nenhum informado";
+
+        document.getElementById("docProcedimentos").textContent =
+            dados.procedimentos || "Nenhum informado";
+
+        document.getElementById("docEvolucao").textContent =
+            dados.evolucao || "Não informado";
+
+        document.getElementById("docCondicao").textContent =
+            dados.condicaoAlta || "Não informado";
+
+
+        document.getElementById("docOrientacoes").textContent =
+            dados.orientacoes.gerais || "Não informado";
+
+        document.getElementById("docCuidados").textContent =
+            dados.orientacoes.cuidadosCasa || "Não informado";
+
+        document.getElementById("docAlimentacao").textContent =
+            dados.orientacoes.alimentacao || "Não informado";
+
+        document.getElementById("docAtividades").textContent =
+            dados.orientacoes.atividades || "Não informado";
+
+        document.getElementById("docSinais").textContent =
+            dados.orientacoes.sinaisAlerta || "Não informado";
+
+        document.getElementById("docRetorno").textContent =
+            dados.orientacoes.retorno || "Não informado";
+
+
+        document.getElementById("docObservacoes").textContent =
+            dados.observacoes || "Nenhuma observação.";
+
+
+        document.getElementById("docNomeMedico").textContent =
+            dados.medico.nome || "Médico responsável";
+
+        document.getElementById("docCrm").textContent =
+            dados.medico.crm || "Não informado";
+
+        document.getElementById("docDataEmissao").textContent =
+            formatarData(dados.medico.dataEmissao) || "Não informado";
+
+
+        const tabela =
+            document.getElementById("docMedicamentos");
+
+        tabela.innerHTML = "";
+
+
+        if (dados.medicamentos.length === 0) {
+
+            tabela.innerHTML = `
+                <tr>
+                    <td colspan="5">
+                        Nenhuma medicação prescrita na alta.
+                    </td>
+                </tr>
+            `;
+
+            return;
+
+        }
+
+
+        dados.medicamentos.forEach(med => {
+
+            const tr =
+                document.createElement("tr");
+
+
+            const valores = [
+                med.nome,
+                med.dosagem,
+                med.frequencia,
+                med.duracao,
+                med.observacao || "—"
+            ];
+
+
+            valores.forEach(valor => {
+
+                const td =
+                    document.createElement("td");
+
+                td.textContent =
+                    valor || "—";
+
+                tr.appendChild(td);
+
+            });
+
+
+            tabela.appendChild(tr);
+
+        });
+
+    }
+
+
+    /* =========================================================
+       GERAR PDF
+       ========================================================== */
+
+    function gerarPDF() {
+
+        if (!validarFormulario()) {
+            return;
+        }
+
+
+        preencherDocumento();
+
+
+        setTimeout(() => {
+
+            window.print();
+
+        }, 150);
+
+    }
+
+
+    /* =========================================================
+       INICIALIZAÇÃO
+       ========================================================== */
+
+    definirDataAtual();
+
+    atualizarTabelaMedicamentos();
+
+</script>
+
+</body>
+</html>
