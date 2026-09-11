@@ -10,23 +10,84 @@
   <link rel="stylesheet" href="css/style.css">
 
   <style>
+    /* ========================================
+       BASE
+    ======================================== */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f6fa;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px 40px;
+    }
+
+
+    /* ========================================
+       CABEÇALHO
+    ======================================== */
+
+    header {
+      background: linear-gradient(135deg, #0d47a1, #1565c0);
+      color: white;
+      padding: 28px 30px;
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+      margin-bottom: 28px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
     .acoes-header {
       display: flex;
-      gap: 10px;
-      align-items: center;
+      gap: 12px;
+      margin-top: 22px;
       flex-wrap: wrap;
-      margin-top: 1rem;
+    }
+
+    .btn-pdf,
+    .btn-alta {
+      border: none;
+      padding: 11px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-pdf {
+      background: white;
+      color: #0d47a1;
+    }
+
+    .btn-pdf:hover {
+      background: #eaf1fb;
+      transform: translateY(-1px);
     }
 
     .btn-alta {
-      padding: 10px 20px;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 8px;
-      border: none;
       background: #198754;
       color: white;
-      transition: 0.2s;
     }
 
     .btn-alta:hover {
@@ -34,26 +95,285 @@
       transform: translateY(-1px);
     }
 
-    .btn-pdf {
-      padding: 10px 20px;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 8px;
+
+    /* ========================================
+       TÍTULOS
+    ======================================== */
+
+    h2 {
+      margin: 0 0 18px;
+      color: #0d47a1;
+      font-size: 22px;
+    }
+
+    h3 {
+      color: #1f2937;
+    }
+
+    hr {
       border: none;
+      border-top: 1px solid #dfe5ec;
+      margin: 30px 0;
+    }
+
+
+    /* ========================================
+       ÁREA DE TRIAGEM
+    ======================================== */
+
+    #triagens {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
       background: white;
-      color: var(--primary-color);
+      border: 1px solid #e1e7ef;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+      transition: 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.09);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: #0d47a1;
+      font-size: 18px;
+    }
+
+    .card p {
+      margin: 9px 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .card b {
+      color: #374151;
+    }
+
+
+    /* ========================================
+       CLASSIFICAÇÃO DE RISCO
+    ======================================== */
+
+    .verde,
+    .amarelo,
+    .vermelho {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .verde {
+      background: #d1fae5;
+      color: #047857;
+    }
+
+    .amarelo {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .vermelho {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+
+    /* ========================================
+       BOTÃO ATENDER
+    ======================================== */
+
+    .card button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 11px;
+      border: none;
+      border-radius: 8px;
+      background: #0d6efd;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .card button:hover {
+      background: #0b5ed7;
+    }
+
+
+    /* ========================================
+       FORMULÁRIO DE CONSULTA
+    ======================================== */
+
+    .consulta-box {
+      background: white;
+      border: 1px solid #e1e7ef;
+      border-radius: 14px;
+      padding: 25px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .consulta-box h3 {
+      margin-top: 0;
+      color: #0d47a1;
+      font-size: 19px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      border: 1px solid #ccd5e0;
+      border-radius: 8px;
+      background: #fff;
+      color: #1f2937;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #1565c0;
+      box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
+    }
+
+    input[readonly] {
+      background: #f1f5f9;
+      color: #475569;
+      cursor: not-allowed;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .consulta-box > button {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #0d47a1;
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .consulta-box > button:hover {
+      background: #083b87;
+    }
+
+
+    /* ========================================
+       RESPONSIVIDADE
+    ======================================== */
+
+    @media (max-width: 600px) {
+
+      .container {
+        margin: 15px auto;
+        padding: 0 12px 30px;
+      }
+
+      header {
+        padding: 22px;
+      }
+
+      header h1 {
+        font-size: 23px;
+      }
+
+      .acoes-header {
+        flex-direction: column;
+      }
+
+      .btn-pdf,
+      .btn-alta {
+        width: 100%;
+      }
+
+      #triagens {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    /* ========================================
+       IMPRESSÃO
+    ======================================== */
+
+    @media print {
+
+      body {
+        background: white;
+      }
+
+      .acoes-header,
+      .card button,
+      .consulta-box {
+        display: none;
+      }
+
+      .container {
+        max-width: 100%;
+        margin: 0;
+      }
+
+      header {
+        color: black;
+        background: white;
+        box-shadow: none;
+        border-bottom: 2px solid #0d47a1;
+        border-radius: 0;
+      }
+
+      #triagens {
+        display: block;
+      }
+
+      .card {
+        margin-bottom: 15px;
+        box-shadow: none;
+      }
     }
   </style>
 </head>
+
 
 <body>
 
 <div class="container">
 
-  <header>
-    <h1>Painel Médico</h1>
+  <!-- ========================================
+       CABEÇALHO
+  ========================================= -->
 
-    <p>Gestão e atendimento de pacientes — Sistema Sentinela</p>
+  <header>
+
+    <h1>🏥 SENTINELA</h1>
+
+    <p>
+      Sistema de Gestão Hospitalar
+    </p>
 
     <div class="acoes-header">
 
@@ -70,36 +390,61 @@
       </button>
 
     </div>
+
   </header>
+
+
+  <!-- ========================================
+       PAINEL MÉDICO
+  ========================================= -->
 
   <h2>🩺 Painel Médico</h2>
 
+
+  <!-- ========================================
+       PACIENTES AGUARDANDO ATENDIMENTO
+  ========================================= -->
+
   <div id="triagens"></div>
+
 
   <hr>
 
-  <h3>Consulta</h3>
 
-  <input
-    id="paciente"
-    placeholder="Paciente"
-    readonly>
+  <!-- ========================================
+       CONSULTA
+  ========================================= -->
 
-  <input
-    id="diagnostico"
-    placeholder="Diagnóstico">
+  <div class="consulta-box">
 
-  <select id="medicacao">
-    <option value="">Selecione a medicação</option>
-  </select>
+    <h3>📋 Consulta Médica</h3>
 
-  <textarea
-    id="obs"
-    placeholder="Observações"></textarea>
+    <input
+      id="paciente"
+      placeholder="Paciente"
+      readonly>
 
-  <button onclick="salvar()">
-    Salvar Consulta
-  </button>
+    <input
+      id="diagnostico"
+      placeholder="Diagnóstico">
+
+    <select id="medicacao">
+
+      <option value="">
+        Selecione a medicação
+      </option>
+
+    </select>
+
+    <textarea
+      id="obs"
+      placeholder="Observações"></textarea>
+
+    <button onclick="salvar()">
+      ✓ Salvar Consulta
+    </button>
+
+  </div>
 
 </div>
 
@@ -114,7 +459,9 @@ let triagensCarregadas = [];
 // ========================================
 
 function irParaAlta() {
+
   window.location.href = "alta.html";
+
 }
 
 
@@ -132,9 +479,27 @@ function carregar() {
 
       triagensCarregadas = data;
 
-      const div = document.getElementById("triagens");
+      const div =
+        document.getElementById("triagens");
 
       div.innerHTML = "";
+
+
+      if (data.length === 0) {
+
+        div.innerHTML = `
+          <div class="card">
+            <h3>Nenhum paciente aguardando</h3>
+            <p>
+              Não existem pacientes aguardando
+              atendimento médico no momento.
+            </p>
+          </div>
+        `;
+
+        return;
+      }
+
 
       data.forEach((t, index) => {
 
@@ -142,7 +507,7 @@ function carregar() {
 
           <div class="card">
 
-            <h3>${t.nome}</h3>
+            <h3>👤 ${t.nome}</h3>
 
             <p>
               <b>Sintoma:</b>
@@ -155,8 +520,9 @@ function carregar() {
             </p>
 
             <p>
+              <b>Classificação:</b>
               <span class="${t.risco}">
-                ${t.risco}
+                ${t.risco || "Não classificado"}
               </span>
             </p>
 
@@ -171,24 +537,26 @@ function carregar() {
             </p>
 
             <button onclick="selecionar(${index})">
-              Atender
+              🩺 Atender Paciente
             </button>
 
           </div>
 
         `;
+
       });
 
     })
 
     .catch(error => {
 
-      console.error("Erro ao carregar triagens:", error);
-
-      document.getElementById("triagens").innerHTML =
-        "<p>Erro ao carregar os pacientes.</p>";
+      console.error(
+        "Erro ao carregar triagens:",
+        error
+      );
 
     });
+
 }
 
 
@@ -198,14 +566,24 @@ function carregar() {
 
 function selecionar(index) {
 
-  const t = triagensCarregadas[index];
+  const t =
+    triagensCarregadas[index];
 
-  document.getElementById("paciente").value = t.nome;
 
-  document.getElementById("obs").value =
-    t.observacao || "";
+  document.getElementById(
+    "paciente"
+  ).value = t.nome;
 
-  if (t.alergia && t.alergia !== "Nenhuma") {
+
+  document.getElementById(
+    "obs"
+  ).value = t.observacao || "";
+
+
+  if (
+    t.alergia &&
+    t.alergia !== "Nenhuma"
+  ) {
 
     alert(
       "⚠️ Paciente possui alergia: " +
@@ -230,13 +608,17 @@ function carregarMedicacoes() {
     .then(data => {
 
       const select =
-        document.getElementById("medicacao");
+        document.getElementById(
+          "medicacao"
+        );
+
 
       select.innerHTML = `
         <option value="">
           Selecione a medicação
         </option>
       `;
+
 
       data.forEach(med => {
 
@@ -261,6 +643,7 @@ function carregarMedicacoes() {
       );
 
     });
+
 }
 
 
@@ -271,25 +654,35 @@ function carregarMedicacoes() {
 function salvar() {
 
   const paciente =
-    document.getElementById("paciente").value;
+    document.getElementById(
+      "paciente"
+    ).value;
 
   const diagnostico =
-    document.getElementById("diagnostico").value;
+    document.getElementById(
+      "diagnostico"
+    ).value;
 
   const medicacao =
-    document.getElementById("medicacao").value;
+    document.getElementById(
+      "medicacao"
+    ).value;
 
   const obs =
-    document.getElementById("obs").value;
+    document.getElementById(
+      "obs"
+    ).value;
 
 
   if (!paciente) {
 
     alert(
-      "Selecione um paciente clicando em Atender."
+      "Selecione um paciente clicando em " +
+      "Atender Paciente."
     );
 
     return;
+
   }
 
 
@@ -300,6 +693,7 @@ function salvar() {
     );
 
     return;
+
   }
 
 
@@ -310,6 +704,7 @@ function salvar() {
     );
 
     return;
+
   }
 
 
@@ -335,9 +730,11 @@ function salvar() {
   .then(r => {
 
     if (!r.ok) {
+
       throw new Error(
         "Erro ao salvar consulta"
       );
+
     }
 
     return r.json();
@@ -346,19 +743,27 @@ function salvar() {
 
   .then(() => {
 
-    alert("✅ Consulta salva com sucesso!");
+    alert(
+      "✅ Consulta salva com sucesso!"
+    );
+
 
     document.getElementById(
       "diagnostico"
     ).value = "";
 
+
     document.getElementById(
       "medicacao"
     ).value = "";
 
+
     document.getElementById(
       "obs"
     ).value = "";
+
+
+    carregar();
 
   })
 
