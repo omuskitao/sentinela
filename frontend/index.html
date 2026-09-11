@@ -1,33 +1,582 @@
+```html
 <!DOCTYPE html>
-<html>
-<head>
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-<div class="container">
-  <h2>🏥 Sistema Hospitalar</h2>
-  <input id="usuario" placeholder="Usuário">
-  <input id="senha" type="password" placeholder="Senha">
-  <button onclick="login()">Entrar</button>
-</div>
+<html lang="pt-BR">
 
-<script>
-function login() {
-  fetch("/login", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      usuario: usuario.value,
-      senha: senha.value
-    })
-  })
-  .then(r => r.json())
-  .then(data => {
-    if(data.tipo === "triagem") location.href = "triagem.html";
-    if(data.tipo === "medico") location.href = "medico.html";
-    if(data.tipo === "atendimento") location.href = "atendimento.html";
-  });
-}
-</script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Sentinela - Login</title>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+
+    /* ========================================
+       CONFIGURAÇÕES GERAIS
+    ======================================== */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      font-family: Arial, Helvetica, sans-serif;
+
+      background:
+        linear-gradient(
+          135deg,
+          #eaf2fb 0%,
+          #f5f8fc 50%,
+          #e8f0f8 100%
+        );
+
+      color: #1f2937;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+    }
+
+
+    /* ========================================
+       CONTAINER PRINCIPAL
+    ======================================== */
+
+    .login-container {
+      width: 100%;
+      max-width: 430px;
+    }
+
+
+    /* ========================================
+       CARD DE LOGIN
+    ======================================== */
+
+    .login-card {
+      background: white;
+
+      border: 1px solid #e1e7ef;
+
+      border-radius: 16px;
+
+      padding: 40px 35px;
+
+      box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.10);
+    }
+
+
+    /* ========================================
+       LOGO
+    ======================================== */
+
+    .logo-area {
+      text-align: center;
+
+      margin-bottom: 30px;
+    }
+
+    .logo-icon {
+      width: 72px;
+      height: 72px;
+
+      margin: 0 auto 15px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: linear-gradient(
+        135deg,
+        #0d47a1,
+        #1565c0
+      );
+
+      color: white;
+
+      border-radius: 18px;
+
+      font-size: 34px;
+
+      box-shadow:
+        0 6px 15px rgba(13, 71, 161, 0.25);
+    }
+
+    .logo-area h1 {
+      margin: 0;
+
+      color: #0d47a1;
+
+      font-size: 30px;
+
+      font-weight: 800;
+
+      letter-spacing: 1px;
+    }
+
+    .logo-area p {
+      margin: 8px 0 0;
+
+      color: #64748b;
+
+      font-size: 14px;
+    }
+
+
+    /* ========================================
+       TÍTULO
+    ======================================== */
+
+    .login-title {
+      margin-bottom: 22px;
+    }
+
+    .login-title h2 {
+      margin: 0;
+
+      color: #1f2937;
+
+      font-size: 21px;
+    }
+
+    .login-title p {
+      margin: 6px 0 0;
+
+      color: #64748b;
+
+      font-size: 13px;
+    }
+
+
+    /* ========================================
+       FORMULÁRIO
+    ======================================== */
+
+    .campo {
+      margin-bottom: 18px;
+    }
+
+    .campo label {
+      display: block;
+
+      margin-bottom: 7px;
+
+      color: #374151;
+
+      font-size: 14px;
+
+      font-weight: 600;
+    }
+
+    .campo input {
+      width: 100%;
+
+      padding: 13px 14px;
+
+      border: 1px solid #ccd5e0;
+
+      border-radius: 8px;
+
+      background: #fff;
+
+      color: #1f2937;
+
+      font-size: 14px;
+
+      outline: none;
+
+      transition: 0.2s;
+    }
+
+    .campo input:focus {
+      border-color: #1565c0;
+
+      box-shadow:
+        0 0 0 3px rgba(21, 101, 192, 0.10);
+    }
+
+    .campo input::placeholder {
+      color: #94a3b8;
+    }
+
+
+    /* ========================================
+       BOTÃO LOGIN
+    ======================================== */
+
+    .btn-login {
+      width: 100%;
+
+      margin-top: 5px;
+
+      padding: 14px;
+
+      border: none;
+
+      border-radius: 8px;
+
+      background: linear-gradient(
+        135deg,
+        #0d47a1,
+        #1565c0
+      );
+
+      color: white;
+
+      font-size: 15px;
+
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition: 0.2s;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 5px 15px rgba(13, 71, 161, 0.25);
+    }
+
+    .btn-login:active {
+      transform: translateY(0);
+    }
+
+
+    /* ========================================
+       MENSAGEM DE ERRO
+    ======================================== */
+
+    #mensagem {
+      display: none;
+
+      margin-top: 15px;
+
+      padding: 11px 13px;
+
+      border-radius: 8px;
+
+      background: #fee2e2;
+
+      color: #b91c1c;
+
+      font-size: 13px;
+
+      text-align: center;
+    }
+
+
+    /* ========================================
+       RODAPÉ
+    ======================================== */
+
+    .login-footer {
+      margin-top: 25px;
+
+      padding-top: 18px;
+
+      border-top: 1px solid #e5e7eb;
+
+      text-align: center;
+
+      color: #94a3b8;
+
+      font-size: 12px;
+
+      line-height: 1.5;
+    }
+
+    .login-footer strong {
+      color: #64748b;
+    }
+
+
+    /* ========================================
+       RESPONSIVIDADE
+    ======================================== */
+
+    @media (max-width: 480px) {
+
+      body {
+        padding: 15px;
+      }
+
+      .login-card {
+        padding: 30px 23px;
+      }
+
+      .logo-area h1 {
+        font-size: 26px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <div class="login-container">
+
+    <div class="login-card">
+
+
+      <!-- ========================================
+           LOGO
+      ========================================= -->
+
+      <div class="logo-area">
+
+        <div class="logo-icon">
+          🏥
+        </div>
+
+        <h1>SENTINELA</h1>
+
+        <p>
+          Sistema de Gestão Hospitalar
+        </p>
+
+      </div>
+
+
+      <!-- ========================================
+           TÍTULO
+      ========================================= -->
+
+      <div class="login-title">
+
+        <h2>Acesso ao sistema</h2>
+
+        <p>
+          Entre com suas credenciais para continuar.
+        </p>
+
+      </div>
+
+
+      <!-- ========================================
+           FORMULÁRIO
+      ========================================= -->
+
+      <form onsubmit="login(); return false;">
+
+        <div class="campo">
+
+          <label for="usuario">
+            Usuário
+          </label>
+
+          <input
+            type="text"
+            id="usuario"
+            placeholder="Digite seu usuário"
+            autocomplete="username"
+            required>
+
+        </div>
+
+
+        <div class="campo">
+
+          <label for="senha">
+            Senha
+          </label>
+
+          <input
+            type="password"
+            id="senha"
+            placeholder="Digite sua senha"
+            autocomplete="current-password"
+            required>
+
+        </div>
+
+
+        <button
+          type="submit"
+          class="btn-login">
+
+          Entrar no Sistema
+
+        </button>
+
+      </form>
+
+
+      <!-- ========================================
+           MENSAGEM DE ERRO
+      ========================================= -->
+
+      <div id="mensagem"></div>
+
+
+      <!-- ========================================
+           RODAPÉ
+      ========================================= -->
+
+      <div class="login-footer">
+
+        <strong>SENTINELA</strong><br>
+
+        Sistema de Gestão Hospitalar<br>
+
+        Acesso restrito a usuários autorizados.
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    function login() {
+
+      const usuario =
+        document.getElementById("usuario").value.trim();
+
+      const senha =
+        document.getElementById("senha").value;
+
+      const mensagem =
+        document.getElementById("mensagem");
+
+
+      mensagem.style.display = "none";
+      mensagem.textContent = "";
+
+
+      if (!usuario || !senha) {
+
+        mostrarErro(
+          "Preencha o usuário e a senha."
+        );
+
+        return;
+
+      }
+
+
+      fetch("/login", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          usuario,
+          senha
+        })
+
+      })
+
+      .then(response => {
+
+        if (!response.ok) {
+
+          throw new Error(
+            "Login inválido"
+          );
+
+        }
+
+        return response.json();
+
+      })
+
+      .then(data => {
+
+        /*
+          Redirecionamento de acordo
+          com o tipo de usuário.
+        */
+
+        if (data.tipo === "triagem") {
+
+          window.location.href =
+            "triagem.html";
+
+        }
+
+        else if (data.tipo === "medico") {
+
+          window.location.href =
+            "medico.html";
+
+        }
+
+        else if (data.tipo === "atendimento") {
+
+          window.location.href =
+            "atendimento.html";
+
+        }
+
+        else if (data.tipo === "administracao") {
+
+          /*
+            Caso você ainda não tenha
+            uma página específica para
+            administração, ela poderá
+            ser adicionada posteriormente.
+          */
+
+          window.location.href =
+            "atendimento.html";
+
+        }
+
+        else {
+
+          mostrarErro(
+            "Tipo de usuário não reconhecido."
+          );
+
+        }
+
+      })
+
+      .catch(error => {
+
+        console.error(error);
+
+        mostrarErro(
+          "Usuário ou senha incorretos."
+        );
+
+      });
+
+    }
+
+
+    function mostrarErro(texto) {
+
+      const mensagem =
+        document.getElementById("mensagem");
+
+      mensagem.textContent = "⚠️ " + texto;
+
+      mensagem.style.display = "block";
+
+    }
+
+  </script>
+
 </body>
+
 </html>
+```
