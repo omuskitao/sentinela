@@ -1,86 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Almoxarifado</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f7fb">
+  <title>MedFlow | Almoxarifado</title>
+  <link rel="stylesheet" href="css/almoxerifado.css">
+  <link rel="stylesheet" href="css/session-ui.css">
 </head>
-<body>
-    <header class="navbar">
-        <div class="nav-brand">
-            <div class="logo-icon"></div>
+<body class="medflow-has-nav almox-page">
+  <main class="page">
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">CONTROLE DE SUPRIMENTOS</p>
+        <h1>Estoque de medicamentos</h1>
+        <p class="page-description">Registre entradas, acompanhe os níveis e mantenha o histórico atualizado.</p>
+      </div>
+      <button class="button button-outline" id="atualizarTudo" type="button">
+        <span aria-hidden="true">↻</span> Atualizar dados
+      </button>
+    </section>
+
+    <div class="alert" id="alertaEstoque" role="status" aria-live="polite" hidden></div>
+
+    <section class="stats-grid" aria-label="Resumo do estoque">
+      <article class="stat-card">
+        <span class="stat-icon icon-purple" aria-hidden="true">▦</span>
+        <div><p>Total de medicamentos</p><strong id="totalMedicamentos">—</strong></div>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon icon-green" aria-hidden="true">✓</span>
+        <div><p>Estoque normal</p><strong id="estoqueNormal">—</strong></div>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon icon-amber" aria-hidden="true">!</span>
+        <div><p>Estoque baixo <small>(menos de 10)</small></p><strong id="estoqueBaixo">—</strong></div>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon icon-red" aria-hidden="true">×</span>
+        <div><p>Sem estoque</p><strong id="estoqueZerado">—</strong></div>
+      </article>
+    </section>
+
+    <div class="content-grid">
+      <div class="side-column">
+        <section class="card">
+          <div class="card-heading">
             <div>
-                <h1>Hospital Pro - Almoxarifado</h1>
-                <span>Gestão de Entrada e Controle de Estoque</span>
+              <p class="eyebrow">MOVIMENTAÇÃO</p>
+              <h2>Registrar entrada</h2>
             </div>
-        </div>
-        <div class="nav-user">
-            <span class="user-pill" id="nomeUsuario">Almoxarifado</span>
-            <a href="index.html" class="btn-nav"> Sair</a>
-        </div>
-    </header>
+            <span class="heading-icon" aria-hidden="true">＋</span>
+          </div>
+          <div class="tabs" role="tablist" aria-label="Tipo de entrada">
+            <button class="tab-button is-active" id="tabNovo" type="button" role="tab" aria-selected="true" aria-controls="painelNovo">Novo medicamento</button>
+            <button class="tab-button" id="tabRepor" type="button" role="tab" aria-selected="false" aria-controls="painelRepor">Repor estoque</button>
+          </div>
 
-    <div class="container">
-        <div class="alerta-estoque" id="alertaEstoque" style="display:none">
-            <strong>Atenção:</strong> <span id="alertaTexto"></span>
-        </div>
-
-        <div class="stats-bar">
-        <div class="stat-card">
-        <div class="stat-icon purple"></div>
-        <div>
-            <div class="stat-value" id="statItens">--</div>
-            <div class="stat-label">Tipos Cadastrados</div>
-        </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon green"></div>
-        </div>
-        <div class="stat-value" id="statOk">--</div>
-        <div class="stat-label">Estoque Normal</div>
-        </div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon orange"></div>
-        <div>
-            <div class="stat-value" id="statBaixo">--</div>
-            <div>Estoque Baixo (menor que 10)</div>
-        </div>
-    </div>
-    <div class="stat-card">
-        <div class="stat-icon red"></div>
-        <div>
-            <div class="stat-value" id="statZerado">--</div>
-            <div class="stat-label">Zerados / Esgotados</div>
-        </div>
-    </div>
-   </div>
-
-   <div class="main-grid">
-
-    <div class="card">
-        <div class="card-header">
-            <h2> Entrada de Medicamentos</h2>
-        </div>
-        <div class="card-body">
-
-            <div class="entrada-tabs">
-                <button class="tab-btn active" id="tabNovo"
-                 onclick="setTab('novo')">Novo 
-                 Medicamento</button>
-                 <button class="tab-btn" id="tabRepor" onclick="setTab('repor')">Repor Existente</button>
+          <form id="formNovo" class="form-panel" autocomplete="off">
+            <div class="field">
+              <label for="nomeMedicamento">Nome do medicamento</label>
+              <input id="nomeMedicamento" name="nome" maxlength="120" placeholder="Ex.: Paracetamol 750 mg" required>
             </div>
-
-            <div id="painelNovo">
-                <div class="form-group">
-                    <label for="emNome">Nome do Medicamento</label>
-                    <input type="text" id="emNome" class="form-control"
-                    placeholder="Ex: Paracetamol 750mg"
-                        autocomplete="off">
-                </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="quantidadeNova">Quantidade</label>
+                <input id="quantidadeNova" name="quantidade" type="number" min="1" step="1" value="10" required>
+              </div>
+              <div class="field">
+                <label for="unidadeNova">Unidade</label>
+                <select id="unidadeNova" name="unidade" required>
+                  <option value="comprimidos">Comprimidos</option>
+                  <option value="cápsulas">Cápsulas</option>
+                  <option value="ampolas">Ampolas</option>
+                  <option value="frascos">Frascos</option>
+                  <option value="sachês">Sachês</option>
+                  <option value="unidades">Unidades</option>
+                </select>
+              </div>
             </div>
+            <div class="field">
+              <label for="categoriaNova">Categoria</label>
+              <select id="categoriaNova" name="categoria" required>
+                <option value="Geral">Geral</option>
+                <option value="Analgésico/antipirético">Analgésico/antipirético</option>
+                <option value="Antibiótico">Antibiótico</option>
+                <option value="Anti-inflamatório">Anti-inflamatório</option>
+                <option value="Antialérgico">Antialérgico</option>
+                <option value="Protetor gástrico">Protetor gástrico</option>
+                <option value="Antiespasmódico">Antiespasmódico</option>
+                <option value="Solução">Solução</option>
+                <option value="Vitaminas/suplementos">Vitaminas/suplementos</option>
+                <option value="Outra">Outra</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="observacaoNova">Observação <span>(opcional)</span></label>
+              <input id="observacaoNova" name="observacao" maxlength="300" placeholder="Nota fiscal, lote ou validade">
+            </div>
+            <button class="button button-primary button-full" type="submit">Registrar medicamento</button>
+          </form>
+
+          <form id="formRepor" class="form-panel" hidden>
+            <div class="field">
+              <label for="medicamentoReposicao">Medicamento</label>
+              <select id="medicamentoReposicao" name="medicamentoId" required>
+                <option value="">Selecione um medicamento</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="quantidadeReposicao">Quantidade a adicionar</label>
+              <input id="quantidadeReposicao" name="quantidade" type="number" min="1" step="1" value="10" required>
+            </div>
+            <div class="field">
+              <label for="observacaoReposicao">Observação <span>(opcional)</span></label>
+              <input id="observacaoReposicao" name="observacao" maxlength="300" placeholder="Nota fiscal, lote ou validade">
+            </div>
+            <button class="button button-primary button-full" type="submit">Adicionar ao estoque</button>
+          </form>
+        </section>
+
+        <section class="card history-card">
+          <div class="card-heading">
+            <div>
+              <p class="eyebrow">RASTREABILIDADE</p>
+              <h2>Últimas entradas</h2>
+            </div>
+            <button class="icon-button" id="atualizarHistorico" type="button" aria-label="Atualizar histórico" title="Atualizar histórico">↻</button>
+          </div>
+          <div id="historicoEntradas" class="history-list" aria-live="polite">
+            <p class="empty-state">Carregando histórico...</p>
+          </div>
+        </section>
+      </div>
+
+      <section class="card inventory-card">
+        <div class="card-heading inventory-heading">
+          <div>
+            <p class="eyebrow">VISÃO GERAL</p>
+            <h2>Estoque atual</h2>
+          </div>
+          <span class="item-count" id="contagemVisivel">0 itens</span>
         </div>
+        <div class="inventory-tools">
+          <label class="search-box">
+            <span aria-hidden="true">⌕</span>
+            <input id="buscaMedicamento" type="search" placeholder="Buscar medicamento..." aria-label="Buscar medicamento">
+          </label>
+          <div class="filter-chips" role="group" aria-label="Filtrar por situação">
+            <button class="filter-chip is-active" type="button" data-filtro="todos" aria-pressed="true">Todos</button>
+            <button class="filter-chip" type="button" data-filtro="baixo" aria-pressed="false">Estoque baixo</button>
+            <button class="filter-chip" type="button" data-filtro="zerado" aria-pressed="false">Sem estoque</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="inventory-table">
+            <thead>
+              <tr>
+                <th scope="col">Medicamento</th>
+                <th scope="col">Quantidade</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Última entrada</th>
+                <th scope="col"><span class="sr-only">Ações</span></th>
+              </tr>
+            </thead>
+            <tbody id="corpoEstoque">
+              <tr><td class="table-message" colspan="5">Carregando estoque...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
-   </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/almoxerifado.js"></script>
+  <script src="js/session-ui.js"></script>
 </body>
 </html>
